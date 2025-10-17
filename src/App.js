@@ -1,9 +1,10 @@
+// App.js
 import React, { useState } from "react";
 import AgoraCall from "./AgoraCall";
 import { fetchRtcToken } from "./tokenClient";
 
 export default function App() {
-  // Your App ID
+  // Your App ID (unchanged)
   const [appId, setAppId] = useState("bf217a0ed798442f88824ec1d409fbdf");
   const [channel, setChannel] = useState("");
   const [uid, setUid] = useState("");

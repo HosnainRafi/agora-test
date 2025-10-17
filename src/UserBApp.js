@@ -4,13 +4,11 @@ import AgoraCall from "./AgoraCall";
 import { fetchRtcToken } from "./tokenClient";
 
 export default function UserBApp() {
-  // Keep your App ID unchanged
+  // Keep your App ID unchanged for User B
   const [appId, setAppId] = useState("ff35e70c31d54880be4560d53f79931d");
-  // Paste the same channel as User A to join the same room
-  const [channel, setChannel] = useState("");
-  // Use a different uid than User A, e.g., 115766
-  const [uid, setUid] = useState("");
-  const [role, setRole] = useState("publisher");
+  const [channel, setChannel] = useState(""); // SAME channel as User A
+  const [uid, setUid] = useState(""); // DIFFERENT uid (e.g., 115766)
+  const [role, setRole] = useState("subscriber"); // often subscriber by default
   const [token, setToken] = useState("");
   const [inCall, setInCall] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,7 +24,6 @@ export default function UserBApp() {
       if (!["publisher", "subscriber"].includes(role.toLowerCase()))
         throw new Error("Role must be publisher/subscriber");
 
-      // IMPORTANT: this calls your microservice to mint a token for THIS uid on the SAME channel
       const tkn = await fetchRtcToken({ channel, uid: nUid, role });
       if (!tkn || tkn.length < 20)
         throw new Error("Invalid token from service");
@@ -93,8 +90,8 @@ export default function UserBApp() {
               onChange={(e) => setRole(e.target.value)}
               style={{ width: "100%", padding: 8, marginTop: 4 }}
             >
-              <option value="publisher">publisher</option>
               <option value="subscriber">subscriber</option>
+              <option value="publisher">publisher</option>
             </select>
           </div>
           <div style={{ gridColumn: "1 / span 2" }}>

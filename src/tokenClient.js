@@ -1,9 +1,10 @@
+// tokenClient.js
 import axios from "axios";
 
-// Your microservice base
+// Your microservice base (unchanged)
 const BASE = "https://demoms.financemagic.co.uk";
 
-// Uses your exact route: getbyuidandnhannelname
+// Uses your exact route: getbyuidandnhannelname (unchanged)
 export async function fetchRtcToken({ channel, uid, role }) {
   const url =
     `${BASE}/api/mmvoicemicroservice/rtctoken/getbyuidandnhannelname` +
