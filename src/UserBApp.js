@@ -1,37 +1,32 @@
+// UserBApp.js
 import React, { useState } from "react";
 import AgoraCall from "./AgoraCall";
 import { fetchRtcToken } from "./tokenClient";
 
-export default function App() {
-  // Your App ID
-  const [appId, setAppId] = useState("bf217a0ed798442f88824ec1d409fbdf");
+export default function UserBApp() {
+  // Keep your App ID unchanged
+  const [appId, setAppId] = useState("ff35e70c31d54880be4560d53f79931d");
+  // Paste the same channel as User A to join the same room
   const [channel, setChannel] = useState("");
+  // Use a different uid than User A, e.g., 115766
   const [uid, setUid] = useState("");
   const [role, setRole] = useState("publisher");
   const [token, setToken] = useState("");
   const [inCall, setInCall] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const generateUuid = () => {
-    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-      (
-        c ^
-        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-      ).toString(16)
-    );
-  };
-
   const handleJoin = async () => {
     try {
       setLoading(true);
       if (!appId || appId.length < 10) throw new Error("Enter a valid App ID");
-      if (!channel) throw new Error("Enter a channel");
+      if (!channel) throw new Error("Enter the SAME channel as User A");
       const nUid = Number(uid);
       if (!Number.isFinite(nUid) || nUid <= 0)
         throw new Error("UID must be a positive number");
       if (!["publisher", "subscriber"].includes(role.toLowerCase()))
         throw new Error("Role must be publisher/subscriber");
 
+      // IMPORTANT: this calls your microservice to mint a token for THIS uid on the SAME channel
       const tkn = await fetchRtcToken({ channel, uid: nUid, role });
       if (!tkn || tkn.length < 20)
         throw new Error("Invalid token from service");
@@ -58,14 +53,14 @@ export default function App() {
         fontFamily: "Inter, system-ui, Arial",
       }}
     >
-      <h2>Agora Web Test (Your Config)</h2>
+      <h2>User B Join (Same Room)</h2>
 
       {!inCall && (
         <div
           style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}
         >
           <div>
-            <label>App ID (unchanged)</label>
+            <label>App ID</label>
             <input
               value={appId}
               onChange={(e) => setAppId(e.target.value)}
@@ -74,29 +69,20 @@ export default function App() {
             />
           </div>
           <div>
-            <label>Channel</label>
-            <div style={{ display: "flex", gap: 8 }}>
-              <input
-                value={channel}
-                onChange={(e) => setChannel(e.target.value)}
-                placeholder="Channel name (UUID recommended)"
-                style={{ width: "100%", padding: 8, marginTop: 4 }}
-              />
-              <button
-                type="button"
-                onClick={() => setChannel(generateUuid())}
-                style={{ marginTop: 4 }}
-              >
-                New UUID
-              </button>
-            </div>
+            <label>Channel (same as User A)</label>
+            <input
+              value={channel}
+              onChange={(e) => setChannel(e.target.value)}
+              placeholder="Paste the same channel string"
+              style={{ width: "100%", padding: 8, marginTop: 4 }}
+            />
           </div>
           <div>
-            <label>UID (number)</label>
+            <label>UID (DIFFERENT from User A)</label>
             <input
               value={uid}
               onChange={(e) => setUid(e.target.value)}
-              placeholder="e.g. 115765"
+              placeholder="e.g. 115766"
               style={{ width: "100%", padding: 8, marginTop: 4 }}
             />
           </div>
